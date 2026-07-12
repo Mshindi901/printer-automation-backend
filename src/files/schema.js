@@ -16,13 +16,17 @@ const Files = sequelize.define('files',{
             key: 'id'
         },
     },
-    name:{
+    file_name:{
         type:DataTypes.STRING,
         allowNull:false
     },
     file_url: {
         type:DataTypes.STRING,
         allowNull:false,
+    },
+    file_size:{
+        type:DataTypes.INTEGER,
+        allowNull:false
     },
     status:{
         type:DataTypes.ENUM('pending', 'completed'),

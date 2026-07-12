@@ -8,7 +8,7 @@ export const fileUpload = async(req, res) => {
         if(!file){
             return res.status(404).json({success:false,message:'File not provide'})
         }
-        const {name} = req.body;
+        const {name} = req.file.originalname;
         if(!name){
             return res.status(400).json({sucess:false,message:'Provide File name'});
         };
@@ -16,16 +16,15 @@ export const fileUpload = async(req, res) => {
         if(!id){
             return res.status(400).json({success:false,message:'Not authenticated, Please Login'})
         };
-        const file_name = `${v4()}-${name}`;
-        const {data,error} = await supabase.storage.from('bucket').upload(file_name, file.buffer);
+        const {data,error} = await supabase.storage.from('bucket').upload(name, file.buffer);
         if(error){
             return res.status(400).json({success:false,message:'Supabase Failed'})
         };
-        const {data: publicUrl} = await supabase.storage.from('bucket').getPublicUrl(data.path)
         const new_file = await Files.create({
-            name,
+            file_name:name,
             uploaded_by: id,
-            file_url:publicUrl,
+            file_url:data.path,
+            file_size:file.size,
             status,
         });
         if(!new_file){
@@ -56,7 +55,7 @@ export const usersFiles = async(req, res) => {
     }
 };
 
-export const getFileById = async(req, res) => {
+export const getFileInfoById = async(req, res) => {
     try {
         const fileId = req.params;
         if(!fileId){
@@ -91,5 +90,31 @@ export const deleteFileRecord = async (req, res) => {
     } catch (error) {
         console.error('Error with deleting a file record:', error);
         return res.status(500).json({success:false,message:'Internal Server Error'});
+    }
+};
+
+export const download_files = async(req, res) => {
+    try {
+        const file_id = req.params;
+        if(!file_id){
+            return res.status(400).json({success:false,message:'Provide File Id'})
+        };
+        const file = await Files.findByPk(file_id);
+        if(!file){
+            return res.status(400).json({success:false,message:'Failed to fetch file'})
+        };
+        const {data, error} = await supabase.storage.from('buckets').download(file.file_url);
+        if(error){
+            return res.status(400).json({success:false,message:'Failed to download file from supabase'})
+        };
+        const buffer = Buffer.from(
+            await data.arrayBuffer()
+        );
+        res.setHeader(
+            'Content-Type','application/pdf'
+        );
+        return res.send(buffer);
+    } catch (error) {
+        return res.status(500).json({success:false,message:'Internal Server Error',error:error});
     }
 };

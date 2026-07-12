@@ -1,13 +1,17 @@
 import express from 'express';
-import {fileUpload, getFileById, usersFiles, deleteFileRecord} from './controller.js';
+import {fileUpload, getFileInfoById, download_files, usersFiles, deleteFileRecord} from './controller.js';
+import authentication from '../middleware/authentication.js';
+import authorization from '../middleware/authorization.js';
 
 const router = express.Router();
 
-router.post('/file', fileUpload);
+router.post('/file', authentication, authorization('user'), fileUpload);
 
-router.get('/file/:id', getFileById);
-router.get('/files', usersFiles);
+router.get('/file/:id', authentication, getFileInfoById);
+router.get('/files',authentication, authorization('user'), usersFiles);
 
-router.delete('/file/:id', deleteFileRecord);
+router.get('/download/agent/:id', download_files);
+
+router.delete('/file/:id', authentication, deleteFileRecord);
 
 export default router;
