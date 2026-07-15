@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from "./src/config/db-connect.js";
+import {apiRateLimiter} from './src/middleware/rate-limit.js'
 
 //admin routes
 import adminRoutes from './src/admin/router.js'
@@ -20,6 +21,7 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(apiRateLimiter);
 
 app.use('/api', adminRoutes);
 app.use('/api', fileRoutes);

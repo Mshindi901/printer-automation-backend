@@ -100,3 +100,96 @@ export const get_pending_jobs = async(req, res) => {
         return res.status(500).json({success:false,message:'Internal Server Error',error:error});
     }
 };
+
+export const jobCompleted = async(req, res) => {
+    try {
+        const id = req.params;
+        if(!id){
+            return res.status(400).json({success:false,message:'Provide id'});
+        };
+        const job = await PrintJobs.findByPk(id);
+        if(!job){
+            return res.status(400).json({success:false,message:'Failed to fetch Job'});
+        };
+        job.status = 'completed';
+
+        const updating = await job.save();
+        if(!updating){
+            return res.status(400).json({success:false,message:'Failed to save update'})
+        };
+        return res.status(200).json({success:true,message:'Job Status Updated'});
+        return res
+    } catch (error) {
+        return res.status(500).json({success:false,message:'Internal Server Error'});
+    }
+};
+
+export const jobDownloading = async (req, res) => {
+    try {
+        const id = req.params;
+        if(!id){
+            return res.status(400).json({success:false,message:'Provide id'});
+        };
+        const job = await PrintJobs.findByPk(id);
+        if(!job){
+            return res.status(400).json({success:false,message:'Failed to fetch Job'});
+        };
+        job.status = 'downloading';
+
+        const updating = await job.save();
+        if(!updating){
+            return res.status(400).json({success:false,message:'Failed to save update'})
+        };
+        return res.status(200).json({success:true,message:'Job Status Updated'});
+        return res
+    } catch (error) {
+        return res.status(500).json({success:false,message:'Internal Server Error'});
+    }
+};
+
+export const jobPrinting = async(req, res) => {
+    try {
+        const id = req.params;
+        if(!id){
+            return res.status(400).json({success:false,message:'Provide id'});
+        };
+        const job = await PrintJobs.findByPk(id);
+        if(!job){
+            return res.status(400).json({success:false,message:'Failed to fetch Job'});
+        };
+        job.status = 'printing';
+
+        const updating = await job.save();
+        if(!updating){
+            return res.status(400).json({success:false,message:'Failed to save update'})
+        };
+        return res.status(200).json({success:true,message:'Job Status Updated'});
+        return res
+    } catch (error) {
+        return res.status(500).json({success:false,message:'Internal Server Error'});
+    }
+};
+
+export const jobFailed = async(req, res) => {
+    try {
+        const id = req.params;
+        if(!id){
+            return res.status(400).json({success:false,message:'Provide id'});
+        };
+        const job = await PrintJobs.findByPk(id);
+        if(!job){
+            return res.status(400).json({success:false,message:'Failed to fetch Job'});
+        };
+        job.status = 'failed';
+
+        const updating = await job.save();
+        if(!updating){
+            return res.status(400).json({success:false,message:'Failed to save update'})
+        };
+        return res.status(200).json({success:true,message:'Job Status Updated'});
+        return res
+    } catch (error) {
+        return res.status(500).json({success:false,message:'Internal Server Error'});
+    }
+};
+

@@ -39,7 +39,7 @@ const PrintJobs = sequelize.define('print-jobs', {
         allowNull:true
     },
     status:{
-        type:DataTypes.ENUM('pending', 'downloading', 'printing', 'completed', 'failed', 'cancelled'),
+        type:DataTypes.ENUM('pending', 'downloading', 'printing', 'completed', 'failed'),
         defaultValue: 'pending',
         allowNull:false
     },
