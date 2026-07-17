@@ -12,7 +12,7 @@ export const signup = async (req, res) => {
         if(!email || !password) {
             return res.status(400).json({ success: false, message: 'Email, password, and role are required' });
         };
-        const register = await authService.registerUser({ first_name, last_name, email, phone, password, role });
+        const register = await authService.registerUser({ first_name, last_name, email, phone, password});
         if(!register){
             return res.status(400).json({ success: false, message: 'User registration failed' });
         };
