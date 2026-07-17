@@ -8,8 +8,8 @@ const authService = new AuthService(authRepo);
 
 export const signup = async (req, res) => {
     try {
-        const { first_name, last_name, email, phone, password, role } = req.body;
-        if(!email || !password || !role) {
+        const { first_name, last_name, email, phone, password} = req.body;
+        if(!email || !password) {
             return res.status(400).json({ success: false, message: 'Email, password, and role are required' });
         };
         const register = await authService.registerUser({ first_name, last_name, email, phone, password, role });
