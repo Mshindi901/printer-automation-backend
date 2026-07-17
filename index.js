@@ -12,6 +12,10 @@ import printJobRoutes from './src/print-jobs/router.js'
 import printerRoutes from './src/printer/routes.js'
 //user routes
 import userRoutes from './src/users/routes.js';
+//auth routes
+import authRoutes from './src/auth/routes.js'
+
+
 
 const app = express();
 
@@ -21,6 +25,7 @@ app.use(express.json());
 app.use(apiRateLimiter);
 
 app.use('/api', adminRoutes);
+app.use('/api', authRoutes)
 app.use('/api', fileRoutes);
 app.use('/api', printJobRoutes);
 app.use('/api', printerRoutes);
