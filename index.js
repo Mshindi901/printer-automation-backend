@@ -1,7 +1,5 @@
 import express from "express";
-import dotenv from 'dotenv';
 import cors from 'cors';
-import connectDB from "./src/config/db-connect.js";
 import {apiRateLimiter} from './src/middleware/rate-limit.js'
 
 //admin routes
@@ -14,7 +12,6 @@ import printJobRoutes from './src/print-jobs/router.js'
 import printerRoutes from './src/printer/routes.js'
 //user routes
 import userRoutes from './src/users/routes.js';
-dotenv.config();
 
 const app = express();
 
@@ -29,7 +26,4 @@ app.use('/api', printJobRoutes);
 app.use('/api', printerRoutes);
 app.use('/api', userRoutes);
 
-app.listen(process.env.PORT, () => {
-    connectDB();
-    console.log(`Server is running on port ${process.env.PORT}`);
-});
+export default app;
