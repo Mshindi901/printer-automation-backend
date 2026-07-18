@@ -1,4 +1,5 @@
 import PrintJobs from "./schema.js";
+import Printers from '../printer/schema.js'
 
 export const add_job = async (req, res) => {
     try {
@@ -85,13 +86,19 @@ export const delete_job = async (req, res) => {
     }
 };
 
-export const get_pending_jobs = async(req, res) => {
+export const get_agent_pending_jobs = async(req, res) => {
     try {
-        const user_id = req.user.id;
-        if(!user_id){
-            return res.status(400).json({success:false,message:'Not authenticated, please try again'});
+        const agent_id = req.is_agent.id
+        if(!agent_id){
+            return res.status(400).json({success:false,message:'Agent is Not authenticated'});
         };
-        const pending_jobs = await PrintJobs.findAll({where:{status:'pending'}});
+        const pending_jobs = await PrintJobs.findAll({where:{status:'pending'}, include:[
+            {
+                model:Printers,
+                as:'printer',
+                where:{agent_id: agent_id}
+            }
+        ]});
         if(!pending_jobs || pending_jobs.length === 0){
             return res.status(400).json({success:false,message:'No pending jobs or API failed'})
         };

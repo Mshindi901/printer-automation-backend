@@ -8,6 +8,14 @@ const Printers = sequelize.define('printers', {
         primaryKey:true,
         allowNull:false
     },
+    agent_id: {
+        type:DataTypes.UUID,
+        referencesL: {
+            model: 'printer_agents',
+            key:'id'
+        },
+        allowNull:false
+    },
     name:{
         type:DataTypes.STRING,
         allowNull:false,

@@ -2,15 +2,15 @@ import Printers from "./schema.js";
 
 export const add_printer = async(req, res) => {
     try {
-        const {name, location, ip_address} = req.body;
-        if(!name || !location || !ip_address){
+        const {name, location, ip_address, agent_id} = req.body;
+        if(!name || !location || !ip_address || !agent_id){
             return res.status(400).json({success:false,message:'Provide all information'});
         };
         const is_printer = await Printers.findOne({where:{ip_address:ip_address}});
         if(is_printer){
             return res.status(400).json({success:false,message:'Printer with that address already exists'})
         };
-        const new_printer = await Printers.create({name, location, status, ip_address});
+        const new_printer = await Printers.create({name, location, status, ip_address, agent_id});
         if(!new_printer){
             return res.status(400).json({success:false,message:'Could not create printer'});
         };
@@ -19,6 +19,23 @@ export const add_printer = async(req, res) => {
         return res.status(500).json({cess:false,message:'Internal Server Error',error:error})
     }
 };
+
+
+export const get_agent_printers = async(req, res) => {
+    try {
+        const agent_id = req.params;
+        if(!agent_id){
+            return res.status(400).json({success:false,message:'Provide the agent record id'})
+        };
+        const printers = await Printers.findAll({where:{agent_id}});
+        if(!printers || printers.length === 0){
+            return res.status(400).json({success:false, message:'Api failed or no records for agent id yet'});
+        };
+        return res.status(200).json({success:true,message:'Printers Found',data:printers});
+    } catch (error) {
+        return res.status(500).json({cess:false,message:'Internal Server Error',error:error})
+    }
+}
 
 export const get_printer_by_name = async(req, res) => {
     try {

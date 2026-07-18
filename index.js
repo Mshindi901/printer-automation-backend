@@ -1,6 +1,7 @@
 import express from "express";
 import cors from 'cors';
-import {apiRateLimiter} from './src/middleware/rate-limit.js'
+import {apiRateLimiter} from './src/middleware/rate-limit.js';
+import './src/config/association.js';
 
 //admin routes
 import adminRoutes from './src/admin/router.js'
@@ -14,6 +15,8 @@ import printerRoutes from './src/printer/routes.js'
 import userRoutes from './src/users/routes.js';
 //auth routes
 import authRoutes from './src/auth/routes.js'
+//Printer_Agent ROutes
+import printerAgentRoutes from './src/printer-agent/router.js';
 
 
 
@@ -30,5 +33,6 @@ app.use('/api', fileRoutes);
 app.use('/api', printJobRoutes);
 app.use('/api', printerRoutes);
 app.use('/api', userRoutes);
+app.use('/api', printerAgentRoutes);
 
 export default app;
