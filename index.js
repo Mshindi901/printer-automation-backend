@@ -26,6 +26,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(apiRateLimiter);
+app.set('trust proxy', 1);
 
 app.use('/api', adminRoutes);
 app.use('/api', authRoutes)
